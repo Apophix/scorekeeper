@@ -10,6 +10,14 @@ interface Player {
   totalScore: number;
 }
 
+// Helper function to convert string to Title Case
+const toTitleCase = (str: string) => {
+  return str.replace(
+    /\w\S*/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  );
+};
+
 export const Route = createFileRoute('/')({
   component: Flip7Scorekeeper,
 });
@@ -34,7 +42,7 @@ function Flip7Scorekeeper() {
   const handleAddPlayer = (playerName: string) => {
     const newPlayer: Player = {
       id: `player-${Date.now()}`,
-      name: playerName,
+      name: toTitleCase(playerName),
       roundScores: Array(currentRound).fill(0),
       totalScore: 0,
     };
@@ -114,22 +122,22 @@ function Flip7Scorekeeper() {
   };
 
   return (
-    <div className="container mx-auto p-2 sm:p-4 lg:p-8 bg-gray-50 min-h-screen shadow-lg rounded-lg">
-      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-800 mb-4 sm:mb-6 lg:mb-8 tracking-tight">Flip7 Scorekeeper</h2>
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-white min-h-screen">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-800 mb-6 sm:mb-8 lg:mb-10 tracking-tight">Flip7 Scorekeeper</h2>
 
       {!winner && (
-        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-white rounded-lg shadow-md">
+        <div className="mb-6 sm:mb-8">
           <PlayerInput onAddPlayer={handleAddPlayer} />
         </div>
       )}
 
       {winner && (
-        <div className="bg-green-50 border border-green-300 text-green-800 px-4 py-3 sm:px-6 sm:py-4 rounded-lg relative mb-4 sm:mb-6 shadow-md text-center">
+        <div className="bg-green-50 border border-green-300 text-green-800 px-6 py-4 rounded-lg relative mb-6 sm:mb-8 shadow-md text-center">
           <strong className="font-bold text-lg sm:text-xl">Game Over!</strong>
           <span className="block sm:inline text-base sm:text-lg"> {winner.name} wins with {winner.totalScore} points!</span>
           <button
             onClick={handleDismissWinner}
-            className="mt-2 sm:mt-0 sm:ml-4 px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
+            className="mt-3 sm:mt-0 sm:ml-4 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
           >
             Dismiss
           </button>
@@ -137,16 +145,16 @@ function Flip7Scorekeeper() {
       )}
 
       {players.length > 0 && (
-        <div className="mb-4 sm:mb-6 bg-white rounded-lg shadow-md p-3 sm:p-4">
+        <div className="mb-6 sm:mb-8">
           {Array.from({ length: currentRound + 1 }).map((_, roundIndex) => (
-            <div key={roundIndex} className="mb-4 p-2 border border-gray-200 rounded-lg relative">
-              <div className="absolute -top-3 left-3 bg-gray-50 px-2 text-xs font-medium text-gray-500 uppercase">
+            <div key={roundIndex} className="mb-6 relative bg-gray-100 border-b border-gray-200 pb-4">
+              <div className="absolute -top-3 left-3 bg-white px-2 text-xs font-medium text-gray-500 uppercase">
                 Round {roundIndex + 1}
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 pt-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pt-4">
                 {players.map((player) => (
-                  <div key={player.id} className="text-center flex flex-col items-center p-1">
-                    <span className="font-semibold text-gray-700 text-sm sm:text-base mb-1">{player.name}</span>
+                  <div key={player.id} className="text-center flex flex-col items-center p-2">
+                    <span className="font-semibold text-gray-700 text-sm sm:text-base mb-2">{player.name}</span>
                     {roundIndex === currentRound && !winner ? (
                       <ScoreInputControl
                         value={player.roundScores[roundIndex] || 0}
@@ -163,23 +171,25 @@ function Flip7Scorekeeper() {
             </div>
           ))}
 
-          <div className="mt-4 pt-4 border-t border-gray-200 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-            <div className="text-center font-semibold text-gray-700 text-base sm:text-lg">Total</div> {/* Label for Total row */}
-            {players.map((player) => (
-              <div key={player.id} className="text-center font-bold text-gray-900 text-base sm:text-lg">
-                {player.name}: {player.totalScore}
-              </div>
-            ))}
+          <div className="mt-6">
+            <div className="text-center font-semibold text-gray-700 text-base sm:text-lg mb-3">Total</div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {players.map((player) => (
+                <div key={player.id} className="text-center font-bold text-gray-900 text-base sm:text-lg">
+                  {player.name}: {player.totalScore}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
 
       {players.length > 0 && (
-        <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-6">
+        <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-6 mt-6 sm:mt-8">
           {!winner && (
             <button
               onClick={handlePreviousRound}
-              className="px-4 py-2 sm:px-6 sm:py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
+              className="px-5 py-2.5 sm:px-7 sm:py-3.5 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
               disabled={currentRound === 0}
             >
               Previous Round
@@ -188,14 +198,14 @@ function Flip7Scorekeeper() {
           {!winner && (
             <button
               onClick={handleNextRound}
-              className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
+              className="px-5 py-2.5 sm:px-7 sm:py-3.5 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
             >
               Next Round
             </button>
           )}
           <button
             onClick={handleNewGameClick}
-            className="px-4 py-2 sm:px-6 sm:py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
+            className="px-5 py-2.5 sm:px-7 sm:py-3.5 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
           >
             New Game
           </button>
@@ -210,13 +220,13 @@ function Flip7Scorekeeper() {
             <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
               <button
                 onClick={handleResetScores}
-                className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
+                className="px-5 py-2.5 sm:px-7 sm:py-3.5 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
               >
                 Reset Scores (Keep Players)
               </button>
               <button
                 onClick={handleClearPlayers}
-                className="px-4 py-2 sm:px-6 sm:py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
+                className="px-5 py-2.5 sm:px-7 sm:py-3.5 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
               >
                 Clear All Players
               </button>

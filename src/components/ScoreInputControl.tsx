@@ -98,7 +98,7 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
   };
 
   const getButtonClass = (value: number, type: 'regular' | 'bonus' | 'multiplier') => {
-    const baseClass = "px-1 py-0.5 text-xs font-semibold rounded transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed";
+    const baseClass = "px-3 py-1.5 text-base font-semibold rounded transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed";
     let isSelected = false;
     let colorClass = '';
 
@@ -117,8 +117,8 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center space-y-1">
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-1">
+    <div className="flex flex-col items-center space-y-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
         {regularCardValues.map((val) => (
           <button
             key={val}
@@ -130,7 +130,7 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
           </button>
         ))}
       </div>
-      <div className="flex justify-center mt-1">
+      <div className="flex justify-center mt-2">
         <button
           key={0}
           onClick={() => handleCardToggle(0)}
@@ -140,7 +140,7 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
           0
         </button>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 mt-1">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
         {bonusCardValues.map((val) => (
           <button
             key={`bonus-${val}`}
@@ -164,15 +164,15 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
         value={value}
         onChange={handleManualChange}
         disabled={disabled}
-        className="w-full p-1 border border-gray-300 rounded-md text-center text-base focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+        className="w-full px-2 py-2 border border-gray-300 rounded-md text-center text-base focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
       />
       {isFlip7BonusActive && (
-        <span className="text-green-600 text-xs font-bold">+15 Flip7 Bonus!</span>
+        <span className="text-green-600 text-sm font-bold">+15 Flip7 Bonus!</span>
       )}
       <button
         onClick={handleBust}
         disabled={disabled}
-        className="px-3 py-1.5 text-sm font-semibold rounded transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed bg-red-600 text-white hover:bg-red-700"
+        className="px-5 py-2.5 text-base font-semibold rounded transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed bg-red-600 text-white hover:bg-red-700"
       >
         Bust
       </button>

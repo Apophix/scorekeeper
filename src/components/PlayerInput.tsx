@@ -16,17 +16,17 @@ const PlayerInput: React.FC<PlayerInputProps> = ({ onAddPlayer }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-4">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 mb-6">
       <input
         type="text"
         placeholder="Enter player name"
         value={playerName}
         onChange={(e) => setPlayerName(e.target.value)}
-        className="flex-grow p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base sm:text-lg transition duration-150 ease-in-out"
+        className="flex-grow p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base sm:text-lg transition duration-150 ease-in-out"
       />
       <button
         type="submit"
-        className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm sm:text-base"
+        className="px-6 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out text-base sm:text-lg"
       >
         Add Player
       </button>
