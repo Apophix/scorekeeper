@@ -25,12 +25,12 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, onColorChange }) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex items-center mb-2">
-        <h3 className="text-lg font-semibold">{player.name}</h3>
         <button
           onClick={() => setIsColorPickerOpen(!isColorPickerOpen)}
-          className="w-6 h-6 rounded-full ml-2 border-2 border-gray-300"
+          className="w-6 h-6 rounded-full mr-2 border-2 border-gray-300"
           style={{ backgroundColor: TAILWIND_COLOR_MAP[player.color]['500'] }}
         />
+        <h3 className="text-base font-normal text-gray-500 mb-1">{player.name}</h3>
         {isColorPickerOpen && (
           <ColorPicker
             currentPlayerColor={player.color}
@@ -38,7 +38,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, onColorChange }) => {
           />
         )}
       </div>
-      <p className="text-xl font-bold mb-2">Total Score: {player.totalScore}</p>
+      <p className="text-xl font-bold mb-2 text-center">{player.totalScore}</p>
     </div>
   );
 };
