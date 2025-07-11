@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ColorPicker from './ColorPicker';
 import { TAILWIND_COLOR_MAP } from '../lib/colors';
+import { Award } from 'lucide-react';
 
 interface Player {
   id: string;
@@ -12,14 +13,28 @@ interface Player {
 interface PlayerCardProps {
   player: Player;
   onColorChange: (newColor: string) => void;
+  rank: number;
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = ({ player, onColorChange }) => {
+const PlayerCard: React.FC<PlayerCardProps> = ({ player, onColorChange, rank }) => {
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 
   const handleColorChange = (newColor: string) => {
     onColorChange(newColor);
     setIsColorPickerOpen(false);
+  };
+
+  const getRankIcon = (playerRank: number) => {
+    switch (playerRank) {
+      case 1:
+        return <Award className="w-5 h-5 text-yellow-500" fill="currentColor" />;
+      case 2:
+        return <Award className="w-5 h-5 text-gray-400" fill="currentColor" />;
+      case 3:
+        return <Award className="w-5 h-5 text-amber-700" fill="currentColor" />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -38,7 +53,10 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, onColorChange }) => {
           />
         )}
       </div>
-      <p className="text-xl font-bold mb-2 text-center">{player.totalScore}</p>
+      <div className="flex items-center justify-center">
+        {getRankIcon(rank)}
+        <p className="text-xl font-bold text-center ml-2">{player.totalScore}</p>
+      </div>
     </div>
   );
 };
