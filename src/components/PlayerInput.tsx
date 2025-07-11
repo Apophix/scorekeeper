@@ -27,7 +27,22 @@ const PlayerInput: React.FC<PlayerInputProps> = ({
       return;
     }
 
-    const nextColorToSuggest = availableColors[players.length % availableColors.length];
+    const usedColors = new Set(players.map(p => p.color));
+    let nextColorToSuggest = availableColors[0]; // Default to the very first color
+
+    // Find the first color in availableColors that is NOT currently used
+    const firstUnusedColorInOrder = availableColors.find(color => !usedColors.has(color));
+
+    if (firstUnusedColorInOrder) {
+      // If an unused color is found, suggest that one
+      nextColorToSuggest = firstUnusedColorInOrder;
+    } else if (players.length > 0) {
+      // If all colors are used, cycle to the next color in general based on the last player's color
+      const lastPlayerColor = players[players.length - 1].color;
+      const lastPlayerColorIndex = availableColors.indexOf(lastPlayerColor);
+      const nextIndex = (lastPlayerColorIndex + 1) % availableColors.length;
+      nextColorToSuggest = availableColors[nextIndex];
+    }
 
     setSelectedColor(nextColorToSuggest);
   }, [players, availableColors]); // Dependencies: players and availableColors
@@ -46,6 +61,7 @@ const PlayerInput: React.FC<PlayerInputProps> = ({
       // Color selection will be handled by the useEffect after player is added
       // No need to reset selectedColor here, useEffect will handle the next suggestion
       setShowColorPicker(false);
+      isManualSelection.current = false;
     }
   };
 
