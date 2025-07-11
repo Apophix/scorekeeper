@@ -122,6 +122,10 @@ function Flip7Scorekeeper() {
     setShowNewGameOptions(false);
   };
 
+  const handleDismissWinner = () => {
+    setWinner(null);
+  };
+
   const handleColorChange = (playerId: string, newColor: string) => {
     setPlayers((prevPlayers) =>
       prevPlayers.map((p) => (p.id === playerId ? { ...p, color: newColor } : p))
