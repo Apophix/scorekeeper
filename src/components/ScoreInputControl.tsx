@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { TAILWIND_COLOR_MAP } from '../lib/colors'; // Import from shared file
 
 interface ScoreInputControlProps {
   value: number; // The current round score from the parent
   onChange: (newValue: number) => void; // Callback to update the parent's round score
   disabled?: boolean;
+  playerColor: string; // New prop for player-specific color
 }
 
 const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
   value,
   onChange,
   disabled = false,
+  playerColor,
 }) => {
   // Internal state to track which cards are currently "toggled on"
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
@@ -97,24 +100,29 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
     onChange(0);
   };
 
-  const getButtonClass = (value: number, type: 'regular' | 'bonus' | 'multiplier') => {
-    const baseClass = "px-3 py-1.5 text-base font-semibold rounded transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed";
+  const getButtonStyles = (value: number, type: 'regular' | 'bonus' | 'multiplier') => {
+    let backgroundColor = '';
+    let textColor = '';
     let isSelected = false;
-    let colorClass = '';
 
     if (type === 'regular') {
       isSelected = selectedCards.includes(value);
-      colorClass = isSelected ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300';
+      backgroundColor = isSelected ? TAILWIND_COLOR_MAP[playerColor]['500'] : TAILWIND_COLOR_MAP[playerColor]['200'];
+      textColor = isSelected ? 'white' : TAILWIND_COLOR_MAP[playerColor]['800'];
     } else if (type === 'bonus') {
       isSelected = selectedBonusCards.includes(value);
-      colorClass = isSelected ? 'bg-orange-500 text-white' : 'bg-orange-200 text-orange-800 hover:bg-orange-300';
+      backgroundColor = isSelected ? TAILWIND_COLOR_MAP.orange['500'] : TAILWIND_COLOR_MAP.orange['200'];
+      textColor = isSelected ? 'white' : TAILWIND_COLOR_MAP.orange['800'];
     } else if (type === 'multiplier') {
       isSelected = isX2MultiplierSelected;
-      colorClass = isSelected ? 'bg-purple-500 text-white' : 'bg-purple-200 text-purple-800 hover:bg-purple-300';
+      backgroundColor = isSelected ? TAILWIND_COLOR_MAP.purple['500'] : TAILWIND_COLOR_MAP.purple['200'];
+      textColor = isSelected ? 'white' : TAILWIND_COLOR_MAP.purple['800'];
     }
 
-    return `${baseClass} ${colorClass}`;
+    return { backgroundColor, color: textColor };
   };
+
+  const baseButtonClass = "px-3 py-1.5 text-base font-semibold rounded transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed shadow-sm";
 
   return (
     <div className="flex flex-col items-center space-y-3">
@@ -124,7 +132,8 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
             key={val}
             onClick={() => handleCardToggle(val)}
             disabled={disabled || (isFlip7BonusActive && !selectedCards.includes(val))}
-            className={getButtonClass(val, 'regular')}
+            className={baseButtonClass}
+            style={getButtonStyles(val, 'regular')}
           >
             {val}
           </button>
@@ -135,7 +144,8 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
           key={0}
           onClick={() => handleCardToggle(0)}
           disabled={disabled || (isFlip7BonusActive && !selectedCards.includes(0))}
-          className={getButtonClass(0, 'regular')}
+          className={baseButtonClass}
+          style={getButtonStyles(0, 'regular')}
         >
           0
         </button>
@@ -146,7 +156,8 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
             key={`bonus-${val}`}
             onClick={() => handleBonusCardToggle(val)}
             disabled={disabled}
-            className={getButtonClass(val, 'bonus')}
+            className={baseButtonClass}
+            style={getButtonStyles(val, 'bonus')}
           >
             +{val}
           </button>
@@ -154,7 +165,8 @@ const ScoreInputControl: React.FC<ScoreInputControlProps> = ({
         <button
           onClick={handleX2MultiplierToggle}
           disabled={disabled}
-          className={getButtonClass(0, 'multiplier')} // Value 0 is a placeholder for styling
+          className={baseButtonClass}
+          style={getButtonStyles(0, 'multiplier')} // Value 0 is a placeholder for styling
         >
           x2
         </button>

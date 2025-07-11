@@ -8,6 +8,7 @@ interface Player {
   name: string;
   roundScores: number[];
   totalScore: number;
+  color: string; // Add color property to Player interface
 }
 
 // Helper function to convert string to Title Case
@@ -24,6 +25,120 @@ export const Route = createFileRoute('/')({
 
 const WINNING_SCORE = 200;
 
+// Define a mapping from Tailwind color names to hex values for different shades
+const TAILWIND_COLOR_MAP: { [key: string]: { [shade: string]: string } } = {
+  // Reds
+  red: {
+    '500': '#ef4444',
+    '200': '#fee2e2',
+    '800': '#991b1b',
+    '900': '#7f1d1d',
+  },
+  rose: {
+    '500': '#f43f5e',
+    '200': '#ffe4e6',
+    '800': '#9f1239',
+    '900': '#881337',
+  },
+  pink: {
+    '500': '#ec4899',
+    '200': '#fbcfe8',
+    '800': '#9d174d',
+    '900': '#831843',
+  },
+  fuchsia: {
+    '500': '#d946ef',
+    '200': '#fae8ff',
+    '800': '#86198f',
+    '900': '#701a75',
+  },
+  // Purples
+  purple: {
+    '500': '#a855f7',
+    '200': '#e9d5ff',
+    '800': '#6b21a8',
+    '900': '#581c87',
+  },
+  violet: {
+    '500': '#8b5cf6',
+    '200': '#ede9fe',
+    '800': '#5b21b6',
+    '900': '#4c1d95',
+  },
+  indigo: {
+    '500': '#6366f1',
+    '200': '#c7d2fe',
+    '800': '#3730a3',
+    '900': '#312e81',
+  },
+  // Blues
+  blue: {
+    '500': '#3b82f6',
+    '200': '#bfdbfe',
+    '800': '#1e40af',
+    '900': '#1e3a8a',
+  },
+  sky: {
+    '500': '#0ea5e9',
+    '200': '#e0f2fe',
+    '800': '#075985',
+    '900': '#0c4a6e',
+  },
+  cyan: {
+    '500': '#06b6d4',
+    '200': '#a5f3fc',
+    '800': '#155e75',
+    '900': '#164e63',
+  },
+  teal: {
+    '500': '#14b8a6',
+    '200': '#a7f3d0',
+    '800': '#0f766e',
+    '900': '#0d5650',
+  },
+  // Greens
+  green: {
+    '500': '#22c55e',
+    '200': '#dcfce7',
+    '800': '#166534',
+    '900': '#14532d',
+  },
+  emerald: {
+    '500': '#10b981',
+    '200': '#a7f3d0',
+    '800': '#065f46',
+    '900': '#047857',
+  },
+  lime: {
+    '500': '#84cc16',
+    '200': '#e0f2fe',
+    '800': '#4d7c0f',
+    '900': '#3f6212',
+  },
+  // Yellows/Oranges
+  yellow: {
+    '500': '#eab308',
+    '200': '#fef9c3',
+    '800': '#a16207',
+    '900': '#854d09',
+  },
+  amber: {
+    '500': '#f59e0b',
+    '200': '#fef3c7',
+    '800': '#b45309',
+    '900': '#92400e',
+  },
+  orange: {
+    '500': '#f97316',
+    '200': '#fed7aa',
+    '800': '#c2410c',
+    '900': '#9a3412',
+  },
+};
+
+// Define a set of distinct colors for players
+const PLAYER_COLORS = Object.keys(TAILWIND_COLOR_MAP);
+
 function Flip7Scorekeeper() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [winner, setWinner] = useState<Player | null>(null);
@@ -39,12 +154,13 @@ function Flip7Scorekeeper() {
     }
   }, [players]);
 
-  const handleAddPlayer = (playerName: string) => {
+  const handleAddPlayer = (playerName: string, playerColor: string) => {
     const newPlayer: Player = {
       id: `player-${Date.now()}`,
       name: toTitleCase(playerName),
       roundScores: Array(currentRound).fill(0),
       totalScore: 0,
+      color: playerColor, // Use the chosen color
     };
     setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
   };
@@ -126,8 +242,8 @@ function Flip7Scorekeeper() {
       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-800 mb-6 sm:mb-8 lg:mb-10 tracking-tight">Flip7 Scorekeeper</h2>
 
       {!winner && (
-        <div className="mb-6 sm:mb-8">
-          <PlayerInput onAddPlayer={handleAddPlayer} />
+        <div className="mb-12 sm:mb-16">
+          <PlayerInput onAddPlayer={handleAddPlayer} availableColors={PLAYER_COLORS} tailwindColorMap={TAILWIND_COLOR_MAP} players={players} />
         </div>
       )}
 
@@ -147,23 +263,24 @@ function Flip7Scorekeeper() {
       {players.length > 0 && (
         <div className="mb-6 sm:mb-8">
           {Array.from({ length: currentRound + 1 }).map((_, roundIndex) => (
-            <div key={roundIndex} className="mb-6 relative bg-gray-100 border-b border-gray-200 pb-4">
+            <div key={roundIndex} className={`mb-8 relative ${roundIndex % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'} rounded-lg shadow-sm border border-gray-200 pb-4`}>
               <div className="absolute -top-3 left-3 bg-white px-2 text-xs font-medium text-gray-500 uppercase">
                 Round {roundIndex + 1}
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pt-4">
                 {players.map((player) => (
                   <div key={player.id} className="text-center flex flex-col items-center p-2">
-                    <span className="font-semibold text-gray-700 text-sm sm:text-base mb-2">{player.name}</span>
+                    <span className="font-semibold text-sm sm:text-base mb-2" style={{ color: TAILWIND_COLOR_MAP[player.color]['800'] }}>{player.name}</span>
                     {roundIndex === currentRound && !winner ? (
                       <ScoreInputControl
                         value={player.roundScores[roundIndex] || 0}
                         onChange={(score) =>
                           handleRoundScoreChange(player.id, roundIndex, score)
                         }
+                        playerColor={player.color}
                       />
                     ) : (
-                      <span className="block text-base font-medium text-gray-900">{player.roundScores[roundIndex] || 0}</span>
+                      <span className="block text-base font-medium" style={{ color: TAILWIND_COLOR_MAP[player.color]['900'] }}>{player.roundScores[roundIndex] || 0}</span>
                     )}
                   </div>
                 ))}
@@ -171,11 +288,11 @@ function Flip7Scorekeeper() {
             </div>
           ))}
 
-          <div className="mt-6">
+          <div className="mt-8 bg-gray-100 rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="text-center font-semibold text-gray-700 text-base sm:text-lg mb-3">Total</div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {players.map((player) => (
-                <div key={player.id} className="text-center font-bold text-gray-900 text-base sm:text-lg">
+                <div key={player.id} className="text-center font-bold text-base sm:text-lg" style={{ color: TAILWIND_COLOR_MAP[player.color]['900'] }}>
                   {player.name}: {player.totalScore}
                 </div>
               ))}
