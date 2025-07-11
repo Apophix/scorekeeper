@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import React, { useState, useEffect } from 'react';
 import PlayerInput from '../components/PlayerInput';
 import ScoreInputControl from '../components/ScoreInputControl';
+import PlayerCard from '../components/PlayerCard';
 
 interface Player {
   id: string;
@@ -121,8 +122,10 @@ function Flip7Scorekeeper() {
     setShowNewGameOptions(false);
   };
 
-  const handleDismissWinner = () => {
-    setWinner(null);
+  const handleColorChange = (playerId: string, newColor: string) => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((p) => (p.id === playerId ? { ...p, color: newColor } : p))
+    );
   };
 
   return (
@@ -180,9 +183,11 @@ function Flip7Scorekeeper() {
             <div className="text-center font-semibold text-gray-700 text-base sm:text-lg mb-3">Total</div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {players.map((player) => (
-                <div key={player.id} className="text-center font-bold text-base sm:text-lg" style={{ color: TAILWIND_COLOR_MAP[player.color]['900'] }}>
-                  {player.name}: {player.totalScore}
-                </div>
+                <PlayerCard
+                  key={player.id}
+                  player={player}
+                  onColorChange={(newColor) => handleColorChange(player.id, newColor)}
+                />
               ))}
             </div>
           </div>
