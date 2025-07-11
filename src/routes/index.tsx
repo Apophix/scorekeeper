@@ -186,7 +186,7 @@ function Flip7Scorekeeper() {
           <div className="mt-8 bg-gray-100 rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="text-center font-semibold text-gray-700 text-base sm:text-lg mb-3">Total</div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {players.sort((a, b) => b.totalScore - a.totalScore).map((player, index) => (
+              {[...players].sort((a, b) => b.totalScore - a.totalScore).map((player, index) => (
                 <PlayerCard
                   key={player.id}
                   player={player}
