@@ -132,6 +132,12 @@ function Flip7Scorekeeper() {
     );
   };
 
+  const handleNameChange = (playerId: string, newName: string) => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((p) => (p.id === playerId ? { ...p, name: newName } : p))
+    );
+  };
+
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-white min-h-screen">
       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-800 mb-6 sm:mb-8 lg:mb-10 tracking-tight">Flip7 Scorekeeper</h2>
@@ -191,6 +197,7 @@ function Flip7Scorekeeper() {
                   key={player.id}
                   player={player}
                   onColorChange={(newColor) => handleColorChange(player.id, newColor)}
+                  onNameChange={(newName) => handleNameChange(player.id, newName)}
                   rank={index + 1}
                 />
               ))}
